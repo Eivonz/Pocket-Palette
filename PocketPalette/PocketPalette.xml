@@ -1,0 +1,602 @@
+<Interface xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Interface.xsd">
+    <Scripts>
+        <Script file="PocketPalette.lua" />
+    </Scripts>
+
+    <Windows>
+	  
+        <Window name="PPMain" layer="default" movable="true" popable="true" savesettings="false">
+            <Size>
+            <!-- Width: 700, height: 250 -->
+                <AbsPoint x="800" y="760" />
+            </Size>
+
+            <Anchors>
+                <Anchor point="center" relativePoint="center" relativeTo="Root">
+                    <AbsPoint x="0" y="0" />
+                </Anchor>
+            </Anchors>
+
+            <EventHandlers>
+                <EventHandler event="OnShown" function="PP.OnShown" />
+            </EventHandlers>
+
+            <Windows>
+                <!-- Window Titlebar -->
+                <Window name="$parentTitleBar" inherits="EA_TitleBar_Default" /> 
+
+                <!-- Window Background -->
+                <!--
+                    EA_Window_DefaultFrame
+                    EA_Window_Default
+                -->
+                <Window name="$parentBG" inherits="EA_Window_DefaultFrame" layer="background">
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft" relativeTo="$parentTitleBar" />
+                        <Anchor point="bottomright" relativePoint="bottomright" relativeTo="$parent" />
+                    </Anchors>
+                </Window>
+
+
+                <!-- Buttons -->
+                <Button name="$parentClose" inherits="EA_Button_DefaultWindowClose">
+                    <EventHandlers>
+                        <EventHandler event="OnLButtonUp" function="PP.OnClose" />
+                    </EventHandlers>
+                    <Anchors>
+                        <Anchor point="topright" relativePoint="topright" relativeTo="$parent">
+                            <AbsPoint x="0" y="0" />
+                        </Anchor>
+                    </Anchors>
+                </Button>
+
+                <!-- Reload Dye Data -->
+                <Button name="$parentRefreshBtn" inherits="EA_Button_DefaultResizeable">
+                    <Size>
+                        <AbsPoint x="100" y="40"/>
+                    </Size>
+                    <EventHandlers>
+                        <EventHandler event="OnLButtonUp" function="PP.UpdateDyeCounts"/>
+                    </EventHandlers>
+                    <Anchors>
+                        <Anchor point="topright" relativeTo="$parent" relativePoint="topright">
+                            <AbsPoint x="-10" y="40" />
+                        </Anchor>
+                    </Anchors>
+                </Button>
+                <!-- Show Character Window Dye Data -->
+                <Button name="$parentCharacterWindowBtn" inherits="EA_Button_DefaultResizeable">
+                    <Size>
+                        <AbsPoint x="100" y="40"/>
+                    </Size>
+                    <EventHandlers>
+                        <EventHandler event="OnLButtonUp" function="PP.ShowPaperDoll"/>
+                    </EventHandlers>
+                    <Anchors>
+                        <Anchor point="topright" relativeTo="$parent" relativePoint="topright">
+                            <AbsPoint x="-10" y="80" />
+                        </Anchor>
+                    </Anchors>
+                </Button>
+                <!-- Toggle showing Dye & item pickers -->
+                <Button name="$parentTogglePickerBtn" inherits="EA_Button_DefaultResizeable">
+                    <Size>
+                        <AbsPoint x="100" y="40"/>
+                    </Size>
+                    <EventHandlers>
+                        <EventHandler event="OnLButtonUp" function="PP.ToggleWindow"/>
+                    </EventHandlers>
+                    <Anchors>
+                        <Anchor point="topright" relativeTo="$parent" relativePoint="topright">
+                            <AbsPoint x="-10" y="120" />
+                        </Anchor>
+                    </Anchors>
+                </Button>
+
+                <Label name="$parentIntroText" inherits="EA_Label_DefaultText_Small" font="font_default_text" textalign="left" handleinput="false" wordwrap="true">
+                    <Size>
+                        <AbsPoint x="660" y="50" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                            <AbsPoint x="30" y="50" />
+                        </Anchor>
+                        <!--
+                        <Anchor point="topright" relativePoint="topleft" relativeTo="$parent">
+                            <AbsPoint x="-60" y="30" />
+                        </Anchor>
+                        -->
+                    </Anchors>
+                    <Color r="255" g="255" b="255" a="255" />
+                </Label>
+
+                <Label name="$parentIntroGuide" font="font_clear_small" textalign="left" handleinput="false" wordwrap="true">
+                    <Size>
+                        <AbsPoint x="660" y="300" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                            <AbsPoint x="30" y="90" />
+                        </Anchor>
+                        <!--
+                        <Anchor point="topright" relativePoint="topleft" relativeTo="$parent">
+                            <AbsPoint x="-60" y="30" />
+                        </Anchor>
+                        -->
+                    </Anchors>
+                    <Color r="255" g="255" b="255" a="255" />
+                </Label>
+            
+            
+                <!-- Dye listbox -->
+                <Window name="DyeWindow" layer="default" movable="false" popable="false">
+                    <Size>
+                        <!-- Width & Height -->
+                        <AbsPoint x="440" y="580" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft">
+                            <AbsPoint x="10" y="170" />
+                        </Anchor>
+<!--
+                        <Anchor point="bottomright" relativePoint="bottomright">
+                            <AbsPoint x="-10" y="-10"/>
+                        </Anchor>
+-->
+                    </Anchors>
+                    <Windows>
+                        <!-- Set background -->
+                        <!--
+                        <Window name="$parentBackground" inherits="EA_Window_ComboBoxMenuBackground">
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent" />
+                                <Anchor point="bottomright" relativePoint="bottomright" relativeTo="$parent" />
+                            </Anchors>
+                        </Window>
+                        -->
+                        <!-- Default window background -->
+                        <Window name="$parentBackground" inherits="EA_Window_DefaultBackgroundFrame" />
+                        <!-- Title Bar -->
+                        <Window name ="$parentTitleBar" inherits="EA_TitleBar_Default" />
+
+                        <!-- Selected dye: Label -->
+                        <Label name="$parentSelectedDye" font="font_clear_small" autoresize="true" textalign="topleft" layer="default" popable="false" handleinput="false">
+                            <Size>
+                                <AbsPoint x="160" y="50" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                    <AbsPoint x="20" y="40" />
+                                </Anchor>
+                            </Anchors>
+                            <Color r="255" g="255" b="255" a="255" />
+                        </Label>
+
+                        <!-- Selected dye: Color -->
+                        <DynamicImage name="$parentSelectedDyeColor" texture="EA_TintableImage" layer="default" handleinput="false" >
+                            <Size>
+                                <AbsPoint x="25" y="25" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                    <AbsPoint x="30" y="70" />
+                                </Anchor>
+                            </Anchors>
+                            <TintColor r="255" g="255" b="255" />
+                        </DynamicImage>
+                        <!-- Selected dye: Name -->
+                        <Label name="$parentSelectedDyeName" inherits="EA_Label_DefaultText_Small" textalign="left" handleinput="false" wordwrap="true">
+                            <Size>
+                                <AbsPoint x="350" y="30" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                    <AbsPoint x="70" y="70"/>
+                                </Anchor>
+                            </Anchors>
+                        </Label>
+                        <!-- Selected dye: Count -->
+                        <Label name="$parentSelectedDyeCount" inherits="EA_Label_DefaultText_Small" textalign="right" handleinput="false" wordwrap="false">
+                            <Size>
+                                <AbsPoint x="50" y="30" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topright" relativePoint="topright" relativeTo="$parent">
+                                    <AbsPoint x="-40" y="70"/>
+                                </Anchor>
+                            </Anchors>
+                            <Color r="255" g="255" b="255" a="255" />
+                        </Label>
+
+
+                        <!-- Dye text filter: Label -->
+                        <Label name="$parentFilter" font="font_clear_small" autoresize="true" textalign="topleft" layer="default" popable="false" handleinput="false">
+                            <Size>
+                                <AbsPoint x="160" y="50" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                    <AbsPoint x="20" y="110" />
+                                </Anchor>
+                            </Anchors>
+                            <Color r="255" g="255" b="255" a="255" />
+                        </Label>
+                        <!-- Dye text filter: EditBox -->
+                        <EditBox name="$parentFilterEditBox" inherits="EA_EditBox_DefaultFrame" taborder="1"  layer="default" maxchars="20">
+                            <Size>
+                                <AbsPoint x="250" y="28" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                    <AbsPoint x="180" y="110"/>
+                                </Anchor>
+                            </Anchors>
+                            <EventHandlers>
+                                <EventHandler event="OnKeyEnter" function="" />
+                                <EventHandler event="OnKeyEscape" function="" />
+                                <EventHandler event="OnTextChanged" function="PP.UpdateDyeFilter" />
+                            </EventHandlers>
+                        </EditBox>
+
+
+                        <!-- Dye Ordering: Label -->
+                        <Label name="$parentDyeOrder" font="font_clear_small" autoresize="true" textalign="topleft" layer="default" popable="false" handleinput="false">
+                            <Size>
+                                <AbsPoint x="160" y="50" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                    <AbsPoint x="20" y="140" />
+                                </Anchor>
+                            </Anchors>
+                            <Color r="255" g="255" b="255" a="255" />
+                        </Label>
+                        <!-- Dye Ordering: ComboBox -->
+                        <ComboBox name="$parentDyeOrderCombo" inherits="EA_ComboBox_DefaultResizable" layer="default">
+                            <Size>
+                                <AbsPoint x="225" y="28" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                    <AbsPoint x="180" y="140"/>
+                                </Anchor>
+                            </Anchors>
+                            <EventHandlers>
+                                <EventHandler event="OnSelChanged" function="PP.UpdateDyeList" />
+                            </EventHandlers>
+                        </ComboBox>
+
+                        <!-- <ListBox
+                                    name="$parentPlayerList"
+                                    scrollbar="ScenarioSummaryVertScroll"
+                                    rowdef="ScenarioSummaryPlayerRow"
+                                    visiblerows="23"
+                                    rowcount="100"
+                                    rowspacing="2">
+                        -->
+                        <ListBox name="$parentList" scrollbar="EA_ScrollBar_DefaultVerticalChain" rowdef="DyeListBoxRowTemplate" visiblerows="8" rowspacing="0" rowcount="-1">
+                            <Size>
+                                <AbsPoint x="-1" y="-1" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft">
+                                    <AbsPoint x="10" y="170" />
+                                </Anchor>
+                                <Anchor point="bottomright" relativePoint="bottomright">
+                                    <AbsPoint x="-10" y="-10"/>
+                                </Anchor>
+                            </Anchors>
+
+                            <ListData table="PP.DyeDataVisible" populationfunction="PP.DyeWindowPopulateDisplay">
+                                <ListColumns>
+                                    <!--
+                                    <ListColumn windowname="Color" variable="color" format="wstring" />
+                                    <ListColumn windowname="Name" variable="Name" format="wstring" />
+                                    -->
+                                </ListColumns>
+                            </ListData>
+                        </ListBox>
+                    </Windows>
+                </Window>
+
+                <!-- SlotSelectorWindow -->
+                <Window name="ItemWindow" layer="default" movable="false" popable="false">
+                   <Size>
+                        <!-- Width & Height -->
+                        <AbsPoint x="340" y="580" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft">
+                            <AbsPoint x="450" y="170" />
+                        </Anchor>
+                    </Anchors>
+                    <Windows>
+                        <!-- Default window background -->
+                        <Window name="$parentBackground" inherits="EA_Window_DefaultBackgroundFrame" />
+                        <!-- Title Bar -->
+                        <Window name ="$parentTitleBar" inherits="EA_TitleBar_Default" />
+
+                        <!--
+                            Helm:       Slot9
+                            Shoulder:   Slot10
+                            Back:       Slot13
+                            Chest:      Slot6
+                            Hands:      Slot7
+                            Belt:       Slot14
+                            Feet:       Slot8
+
+                        
+                        -->
+                        <Label name="$parentGuide" inherits="EA_Label_DefaultText_Small" font="font_default_text" textalign="left" handleinput="false" wordwrap="true">
+                            <Size>
+                                <AbsPoint x="660" y="50" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                    <AbsPoint x="35" y="50" />
+                                </Anchor>
+                                <Anchor point="bottomright" relativePoint="bottomright" relativeTo="$parent">
+                                    <AbsPoint x="-35" y="-20" />
+                                </Anchor>
+                            </Anchors>
+                            <Color r="255" g="255" b="255" a="255" />
+                        </Label>
+
+
+                        <Window name="$parentEquipment" draganddrop="true" layer="background">
+                            <Size>
+                                <AbsPoint x="540" y="675" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                                <AbsPoint x="0" y="0" />
+                                </Anchor>
+                                <Anchor point="bottomright" relativePoint="bottomright" relativeTo="$parent">
+                                <AbsPoint x="0" y="0" />
+                                </Anchor>
+                            </Anchors>
+                            <Windows>
+
+                                <!-- Right Col -->
+
+                                <!-- All slot -->
+                                
+                                <Button name="$parentSlot15" inherits="ItemWindowSlotButton" id="15">
+                                <Anchors>
+                                    <Anchor point="top" relativePoint="bottom" relativeTo="$parentSlot9">
+                                    <AbsPoint x="0" y="0" />
+                                    </Anchor>
+                                </Anchors>
+                                </Button>
+                                <!--
+                                <Label name="$parentSlot15Lbl" inherits="EA_Label_DefaultText_Small" font="font_default_text" textalign="left" handleinput="false" wordwrap="true">
+                                    <Size>
+                                        <AbsPoint x="0" y="0" />
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="topright" relativePoint="topright" relativeTo="$parentSlot15">
+                                            <AbsPoint x="10" y="0" />
+                                        </Anchor>
+                                    </Anchors>
+                                    <Color r="255" g="255" b="255" a="255" />
+                                </Label>
+                                -->
+                                
+                                <!-- Helm slot -->
+                                <Button name="$parentSlot9" inherits="ItemWindowSlotButton" id="9">
+                                <Anchors>
+                                    <Anchor point="top" relativePoint="bottom" relativeTo="$parentSlot10">
+                                    <AbsPoint x="0" y="0" />
+                                    </Anchor>
+                                </Anchors>
+                                </Button>
+                                <!-- Shoulders slot -->
+                                <Button name="$parentSlot10" inherits="ItemWindowSlotButton" id="10">
+                                <Anchors>
+                                    <Anchor point="top" relativePoint="bottom" relativeTo="$parentSlot13">
+                                    <AbsPoint x="0" y="0" />
+                                    </Anchor>
+                                </Anchors>
+                                </Button>
+                                <!-- Back slot -->
+                                <Button name="$parentSlot13" inherits="ItemWindowSlotButton" id="13">
+                                <Anchors>
+                                    <!--<Anchor point="top" relativePoint="bottom" relativeTo="$parentSlot6">-->
+                                    <Anchor point="bottomleft" relativePoint="bottomleft" relativeTo="$parent">
+                                        <AbsPoint x="70" y="-70" />
+                                    </Anchor>
+                                </Anchors>
+                                </Button>
+
+                                <!-- Right Col -->
+
+                                <!-- Body slot -->
+                                <Button name="$parentSlot6" inherits="ItemWindowSlotButton" id="6">
+                                <Anchors>
+                                    <Anchor point="top" relativePoint="bottom" relativeTo="$parentSlot7">
+                                    <AbsPoint x="0" y="0" />
+                                    </Anchor>
+                                </Anchors>
+                                </Button>
+                                <!-- Gloves slot -->
+                                <Button name="$parentSlot7" inherits="ItemWindowSlotButton" id="7">
+                                <Anchors>
+                                    <Anchor point="top" relativePoint="bottom" relativeTo="$parentSlot14">
+                                    <AbsPoint x="0" y="0" />
+                                    </Anchor>
+                                </Anchors>
+                                </Button>
+                                <!-- Belt slot -->
+                                <Button name="$parentSlot14" inherits="ItemWindowSlotButton" id="14">
+                                <Anchors>
+                                    <Anchor point="top" relativePoint="bottom" relativeTo="$parentSlot8">
+                                    <AbsPoint x="0" y="0" />
+                                    </Anchor>
+                                </Anchors>
+                                </Button>
+                                <!-- Boots slot : Positional point-->
+                                <Button name="$parentSlot8" inherits="ItemWindowSlotButton" id="8">
+                                <Anchors>
+                                    <Anchor point="bottomright" relativePoint="bottomright" relativeTo="$parent">
+                                    <!--<Anchor point="top" relativePoint="bottom" relativeTo="$parentSlot11">-->
+                                        <AbsPoint x="-70" y="-70" />
+                                    </Anchor>
+                                </Anchors>
+                                </Button>
+
+                            </Windows>
+                        </Window>
+                    </Windows>
+                </Window>
+
+
+            </Windows>
+
+        </Window>
+
+
+
+
+<!-- *************************************************************************************************** -->
+
+        <!-- Item Slot:Template -->
+        <Button name="ItemWindowSlotButton" inherits="EA_Button_Default" texturescale="1.171" font="font_default_text" textalign="bottomright" drawchildrenfirst="true" draganddrop="true" gameactionbutton="right" scale=".5" >
+            <Size>
+                <AbsPoint x="75" y="75" />
+            </Size>
+            <Windows>
+                <DynamicImage name="$parentIconBase" textureScale="1.171" handleinput="false" layer="background">
+                    <Size>
+                        <AbsPoint x="75" y="75" />
+                    </Size>
+                </DynamicImage>
+                
+                <DynamicImage name="$parentIconPri" texture="EA_TintableImage" handleinput="false" alpha="0.1">
+                    <TintColor r="255" g="0" b="0" />
+                    <Size>
+                        <AbsPoint x="75" y="30"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent" />
+                        <!--<Anchor point="bottomright" relativePoint="bottomright" relativeTo="$parent" />-->
+                    </Anchors>
+                </DynamicImage>
+                
+                <DynamicImage name="$parentIconSec" texture="EA_TintableImage" handleinput="false" alpha="0.1">
+                    <TintColor r="0" g="255" b="0" />
+                    <Size>
+                        <AbsPoint x="75" y="30"/>
+                    </Size>
+                    <Anchors>
+                        <!--<Anchor point="topleft" relativePoint="topleft" relativeTo="$parent" />-->
+                        <Anchor point="bottomleft" relativePoint="bottomleft" relativeTo="$parent" />
+                    </Anchors>
+                </DynamicImage>
+            </Windows>
+            <TexCoords>
+                <Normal texture="EA_SquareFrame" x="0" y="0" />
+                <NormalHighlit texture="EA_SquareFrame_Highlight" x="0" y="0" />
+                <Pressed texture="EA_SquareFrame_Pressed" x="0" y="0" />
+                <Disabled texture="EA_SquareFrame" x="0" y="0" />
+            </TexCoords>
+            <TextOffset x="5" />
+            <EventHandlers>
+            <!--
+                <EventHandler event="OnLButtonDown" function="" />
+                <EventHandler event="OnLButtonUp" function="" />
+                <EventHandler event="OnRButtonDown" function="" />
+                <EventHandler event="OnMouseOver" function="" />
+                <EventHandler event="OnMouseOverEnd" function="" />
+            -->
+                <!--<EventHandler event="OnLButtonDown" function="PP.ItemSlotLMouse" />-->
+                <EventHandler event="OnLButtonUp" function="PP.ItemSlotLMouse" />
+                <!--<EventHandler event="OnRButtonDown" function="PP.ItemSlotRMouse" />-->
+                <EventHandler event="OnRButtonUp" function="PP.ItemSlotRMouse" />
+
+                <EventHandler event="OnMouseOver" function="PP.ItemSlotMouseOver" />
+            </EventHandlers>
+        </Button>
+
+
+        <!-- Dye listbox:RowTemplate -->
+        <!--
+            EA_Button_Tab
+            EA_Button_DefaultResizeable
+            EA_Button_DefaultWindowClose
+            EA_Button_ResizeIconFrame_NoNormalImage
+        -->
+        <Button name="DyeListBoxRowTemplate" inherits="EA_Button_ResizeIconFrame_NoNormalImage" drawchildrenfirst="true">
+            <Size>
+                <AbsPoint x="400" y="50" />
+            </Size>
+
+            <EventHandlers>
+                <!--<EventHandler event="OnMouseOver" function="PP.SelectDye" />-->
+                <EventHandler event="OnLButtonUp" function="PP.SelectDye" />
+            </EventHandlers>
+
+            <Windows>
+                <!--
+                    EA_Window_DefaultBackgroundFrame
+                    EA_Window_ComboBoxMenuBackground
+                -->
+<!--
+                <Window name="$parentBackground" inherits="EA_Window_DefaultBackgroundFrame" layer="background">
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent" />
+                        <Anchor point="bottomright" relativePoint="bottomright" relativeTo="$parent" />
+                    </Anchors>
+                </Window>
+-->
+                <!-- DyeRow:Background -->
+                <DynamicImage name="$parentBackground" texture="EA_TintableImage" handleinput="false">
+                    <TintColor r="0" g="0" b="0" />
+                    <Size>
+                        <AbsPoint x="50" y="50"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent" />
+                        <Anchor point="bottomright" relativePoint="bottomright" relativeTo="$parent" />
+                    </Anchors>
+                </DynamicImage>
+
+                <!-- DyeRow:Color -->
+                <DynamicImage name="$parentColor" texture="EA_TintableImage" handleinput="false">
+                    <TintColor r="255" g="0" b="0" />
+                    <Size>
+                        <AbsPoint x="50" y="50"/>
+                    </Size>
+                    <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                        <AbsPoint x="320" y="230"/>
+                    </Anchor>
+                </DynamicImage>
+                <!-- DyeRow:Name -->
+                <Label name="$parentName" inherits="EA_Label_DefaultText_Small" font="font_default_text" textalign="left" handleinput="false" wordwrap="false">
+                    <Anchors>
+                        <Anchor point="topleft" relativePoint="topleft" relativeTo="$parent">
+                            <AbsPoint x="60" y="10" />
+                        </Anchor>
+                        <Anchor point="bottomleft" relativePoint="bottomright" relativeTo="$parent">
+                            <AbsPoint x="350" y="0" />
+                        </Anchor>
+                    </Anchors>
+                    <Color r="255" g="255" b="255" a="255" />
+                </Label>
+                <!-- DyeRow:Count -->
+                <Label name="$parentCount" inherits="EA_Label_DefaultText_Small" font="font_default_text" textalign="left" handleinput="false" wordwrap="false">
+                    <Size>
+                        <AbsPoint x="50" y="30" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="topright" relativePoint="topright" relativeTo="$parent">
+                            <AbsPoint x="-10" y="10"/>
+                        </Anchor>
+                    </Anchors>
+                    <Color r="255" g="255" b="255" a="255" />
+                </Label>
+
+            </Windows>
+        </Button>
+
+    </Windows>
+</Interface>
