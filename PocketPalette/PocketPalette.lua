@@ -4,6 +4,7 @@
 if not PP then PP = {} end
 
 PP.settings = {
+	persistent = false,
 	ordering = { L"Default", L"Name", L"Count" },
 	filter = "",
 
@@ -12,6 +13,16 @@ PP.settings = {
 	},
 	--items = {15,9,10,13,6,7,14,8}
 	items = {
+		{ slot = 15, iconNum = 11, dyes = {} },
+		{ slot = 9, iconNum = 9, dyes = {} },
+		{ slot = 10, iconNum = 10, dyes = {} },
+		{ slot = 13, iconNum = 13, dyes = {} },
+		{ slot = 6, iconNum = 6, dyes = {} },
+		{ slot = 7, iconNum = 7, dyes = {} },
+		{ slot = 14, iconNum = 14, dyes = {} },
+		{ slot = 8, iconNum = 8, dyes = {} }
+	},
+	itemsPersist = {
 		{ slot = 15, iconNum = 11, dyes = {} },
 		{ slot = 9, iconNum = 9, dyes = {} },
 		{ slot = 10, iconNum = 10, dyes = {} },
@@ -88,9 +99,11 @@ function PP.Initialize()
 	
 
 	PP.CreateWindow()
+	PP.PersistentSettings()
 	PP.GetDyeData()
 	PP.UpdateDyeList()
-	PP.PreviewDyes()
+--	PP.PreviewDyes()
+	RegisterEventHandler(SystemData.Events.LOADING_END, "PP.PreviewDyes")
 end
 
 
@@ -118,12 +131,15 @@ function PP.CreateWindow()
 	
 	-- Main Window
 	LabelSetText(mainWindow.."TitleBarText", L"Pocket Palette by Eibon")
-	ButtonSetText(mainWindow.."RefreshBtn", L"Refresh")
+--	ButtonSetText(mainWindow.."RefreshBtn", L"Refresh")
 	ButtonSetText(mainWindow.."CharacterWindowBtn", L"Paperdoll")
 	ButtonSetText(mainWindow.."TogglePickerBtn", L"Hide")
 	
 	LabelSetText(mainWindow.."IntroText", PP.introText)
 	LabelSetText(mainWindow.."IntroGuide", PP.introGuide)
+
+	LabelSetText(mainWindow.."SaveSettingsLabel", L"Persistent settings")
+	ButtonSetPressedFlag(mainWindow.."SaveSettingsButton", PP.settings.persistent);
 
 	-- Dye window
 	local dyeWindow = "DyeWindow"
@@ -152,6 +168,19 @@ function PP.CreateWindow()
 	PP.settings.windows["main"].anchor.x = x
 	PP.settings.windows["main"].anchor.y = y
 	
+end
+
+function PP.PersistentSettings()
+--	local isChecked = ButtonGetPressedFlag(CheckBox) == false;
+	if (PP.settings.persistent == false) then
+		PP.settings.items = PP.settings.itemsPersist
+	end
+end
+
+function PP.PersistantToggle()
+	local CheckBox = "PPMain" .. "SaveSettings" .. "Button"
+	PP.settings.persistent = PP.settings.persistent == false;
+	ButtonSetPressedFlag(CheckBox, PP.settings.persistent);
 end
 
 --
@@ -542,6 +571,22 @@ function PP.ItemSlotMouseOver()
 
 	local text = PP.toolTips.items[slot]
 
+	-- Add item specific name to tooltip
+	local TTCol = Tooltips.COLOR_HEADING
+	if (CharacterWindow.equipmentData[slot].id == 0) then
+		TTCol = Tooltips.COLOR_ITEM_DEFAULT_GRAY
+	else
+		text = text .. L" : " .. CharacterWindow.equipmentData[slot].name
+
+		-- Display if the item is able to be dyed
+		if (PP.ItemIsDyable(CharacterWindow.equipmentData[slot])) then
+--			text = text .. L"\n\n" .. GetString( StringTables.Default.TEXT_DYEABLE_ITEM)
+		else
+			text = text .. L"\n\n" .. GetString( StringTables.Default.TEXT_CANNOT_DYE_ITEM)
+			TTCol = Tooltips.COLOR_FAILS_REQUIREMENTS
+		end
+	end
+
 	for i, item in ipairs(PP.settings.items) do
 		if (item.slot == slot) then
 
@@ -561,9 +606,20 @@ function PP.ItemSlotMouseOver()
 		end
 	end
 	
-	Tooltips.CreateTextOnlyTooltip( SystemData.ActiveWindow.name, text )
+	Tooltips.CreateTextOnlyTooltip(SystemData.ActiveWindow.name, text)
 	-- ANCHOR_CURSOR, ANCHOR_WINDOW_RIGHT
 	Tooltips.AnchorTooltip( Tooltips.ANCHOR_WINDOW_TOP)
+
+	---
+	--	COLOR_ITEM_DEFAULT_GRAY = { r = 150, g = 150, b = 150 }
+	--	COLOR_FAILS_REQUIREMENTS
+	--	COLOR_WARNING 
+	--	COLOR_ACTION 
+	-- 
+	--	Tooltips.SetTooltipText (1, 1, GetGuildString( StringTables.Guild.TOOLTIP_CALENDAR_NEW_EVENT_BUTTON) )
+	Tooltips.SetTooltipColorDef (1, 1, TTCol)
+
+	Tooltips.Finalize();
 
 --	Tooltips.CreateTextOnlyTooltip(windowName, nil);
 --	Tooltips.SetTooltipText( 1, 1, L"CharacterWindow.EquipmentSlotInfo[slot].name" )
@@ -605,7 +661,9 @@ end
 
 
 function PP.ResetPreviewDyes()
-	RevertAllDyePreview()
+	if (PP.settings.persistent == false) then
+		RevertAllDyePreview()
+	end
 end
 
 function PP.PreviewDyes()

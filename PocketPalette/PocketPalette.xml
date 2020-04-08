@@ -51,6 +51,7 @@
                 </Button>
 
                 <!-- Reload Dye Data -->
+                <!-- 
                 <Button name="$parentRefreshBtn" inherits="EA_Button_DefaultResizeable">
                     <Size>
                         <AbsPoint x="100" y="40"/>
@@ -64,6 +65,46 @@
                         </Anchor>
                     </Anchors>
                 </Button>
+                -->
+                <Window name="$parentSaveSettings">
+                    <Size>
+                        <AbsPoint x="200" y="34" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="topright" relativePoint="topright" relativeTo="$parent">
+                            <AbsPoint x="-20" y="40" />
+                        </Anchor>
+                    </Anchors>
+                    <EventHandlers>
+                        <!--
+                        <EventHandler event="OnInitialize" function="EA_LabelCheckButton.Initialize" />
+                        <EventHandler event="OnLButtonUp" function="EA_LabelCheckButton.Toggle" />
+                        -->
+                        <EventHandler event="OnLButtonUp" function="PP.PersistantToggle" />
+                    </EventHandlers>
+                    <Windows>
+                        <Button name="$parentButton" inherits="EA_Button_DefaultCheckBox" handleinput="false">
+                            <Anchors>
+                                <Anchor point="right" relativePoint="right">
+                                    <AbsPoint x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Button>
+                        <Label name="$parentLabel" inherits="EA_Label_DefaultText_Small" font="font_default_text" textalign="left" handleinput="false" wordwrap="true">
+                            <Size>
+                                <AbsPoint x="200" y="16" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="topright" relativePoint="topright" relativeTo="$parentButton">
+                                    <AbsPoint x="5" y="0" />
+                                </Anchor>
+                            </Anchors>
+                            <Color r="255" g="255" b="255" a="255" />
+                        </Label>
+                    </Windows>
+                </Window>
+
+
                 <!-- Show Character Window Dye Data -->
                 <Button name="$parentCharacterWindowBtn" inherits="EA_Button_DefaultResizeable">
                     <Size>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ModuleFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <UiMod name="Pocket Palette" version="1.0" date="07/15/2019" >
+    <UiMod name="Pocket Palette" version="1.1" date="04/07/2020" >
         
         <Author name="Eibon" email="" />
         <Description text="Pocket Palette inspired by DyePreview. Show the Pocket Palette window using the chat command /PP" />
-        <VersionSettings gameVersion="1.4.0" windowsVersion="1.0" savedVariablesVersion="1.0" />
+        <VersionSettings gameVersion="1.4.0" windowsVersion="1.0" savedVariablesVersion="1.1" />
 
         <Dependencies>
             <Dependency name="EA_AbilitiesWindow" />
@@ -27,16 +27,16 @@
         
         <OnInitialize>
             <CallFunction name="PP.Initialize" />
-        </OnInitialize>
-<!--
-        <OnInitialize>
+            <!--
             <CreateWindow name="DevBarActivator" show="true" />
-        </OnInitialize> 
--->    
+            -->
+        </OnInitialize>
+        <OnUpdate>
+        </OnUpdate>
+
         <SavedVariables>
-<!--
-			<SavedVariable name="PP.colors" />
--->
+			<SavedVariable name="PP.settings.persistent" global="false" />
+            <SavedVariable name="PP.settings.items" global="false" />
 		</SavedVariables>
 
         <OnUpdate />

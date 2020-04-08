@@ -41,6 +41,15 @@ Clicking twice with the same dye color clears the dye.
 ## Feedback:
 Any feedback, bugs and issues are more than welcome, and can be supplied in this thread.
 
+### v1.1
+```
+- Added the option to persist a dye preview. This is enabled by checking the "Persitent settings" checkbox.
+  Persistent dye preview are active per character, and means a specific dye selection should be visible on the character model even after closing PP, loading into the game or reloading the UI etc.
+- Added tooltip info when hovering over an item slot, to indicate if an item can't be dyed.
+- Refresh button removed.
+- Reduced addon's memory footprint.
+```
+
 ### v1.0
 ```
 - Browse all dyes, with filter and ordering options
