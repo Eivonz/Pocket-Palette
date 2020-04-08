@@ -573,11 +573,11 @@ function PP.ItemSlotMouseOver()
 
 	-- Add item specific name to tooltip
 	local TTCol = Tooltips.COLOR_HEADING
-	if (CharacterWindow.equipmentData[slot].id == 0) then
+	if (slot == 15 or CharacterWindow.equipmentData[slot].id == 0) then
 		TTCol = Tooltips.COLOR_ITEM_DEFAULT_GRAY
 	else
+		-- Display item name
 		text = text .. L" : " .. CharacterWindow.equipmentData[slot].name
-
 		-- Display if the item is able to be dyed
 		if (PP.ItemIsDyable(CharacterWindow.equipmentData[slot])) then
 --			text = text .. L"\n\n" .. GetString( StringTables.Default.TEXT_DYEABLE_ITEM)

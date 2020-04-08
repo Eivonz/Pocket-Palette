@@ -92,11 +92,11 @@
                         </Button>
                         <Label name="$parentLabel" inherits="EA_Label_DefaultText_Small" font="font_default_text" textalign="left" handleinput="false" wordwrap="true">
                             <Size>
-                                <AbsPoint x="200" y="16" />
+                                <AbsPoint x="190" y="20" />
                             </Size>
                             <Anchors>
                                 <Anchor point="topright" relativePoint="topright" relativeTo="$parentButton">
-                                    <AbsPoint x="5" y="0" />
+                                    <AbsPoint x="0" y="2" />
                                 </Anchor>
                             </Anchors>
                             <Color r="255" g="255" b="255" a="255" />
